@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="HockeyStats">
+  <meta name="theme-color" content="#0d1b2a">
+  <title>Hockey Stats Spotter</title>
+  <link rel="apple-touch-icon" href="./icons/icon.svg">
+  <link rel="icon" type="image/svg+xml" href="./icons/icon.svg">
+  <link rel="manifest" href="./manifest.json">
+  <link rel="stylesheet" href="./css/styles.css">
+</head>
+<body>
+
+  <!-- Top App Header -->
+  <header class="app-header">
+    <div class="header-top">
+      <div class="app-title">
+        🏒 HockeyStats <span class="badge">SPOTTER</span>
+      </div>
+      <div class="header-actions">
+        <button id="btnUndo" class="btn-undo" disabled>
+          <svg style="width:14px;height:14px" viewBox="0 0 24 24"><path fill="currentColor" d="M12.5 8c-2.65 0-5.05 1-6.9 2.6L2 7v9h9l-3.62-3.62c1.39-1.16 3.16-1.88 5.12-1.88 3.54 0 6.55 2.31 7.6 5.5l2.37-.78C21.08 11.03 17.15 8 12.5 8z"/></svg>
+          Undo
+        </button>
+      </div>
+    </div>
+
+    <!-- Live Scoreboard & Controls -->
+    <div class="scoreboard-bar">
+      <!-- Our Team -->
+      <div class="team-box home">
+        <input type="text" id="homeTeamName" class="team-name-input" value="Our Team" title="Click to rename team">
+        <div class="team-shots-score">
+          <span id="homeScoreDisplay" class="team-score">0</span>
+          <span id="homeShotsDisplay" class="team-shots">SOG: 0</span>
+        </div>
+      </div>
+
+      <!-- Period Selector -->
+      <div class="period-control">
+        <div class="period-chips">
+          <button class="chip-period active" data-period="P1">P1</button>
+          <button class="chip-period" data-period="P2">P2</button>
+          <button class="chip-period" data-period="P3">P3</button>
+          <button class="chip-period" data-period="OT">OT</button>
+        </div>
+        <div class="quick-opponent-sog">
+          <button id="btnOpponentSOG" class="btn-mini-counter" title="Quick log opponent shot">+ Opp SOG</button>
+          <button id="btnOpponentGoal" class="btn-mini-counter" style="background:#7f1d1d;" title="Quick log opponent goal">+ Opp Goal</button>
+        </div>
+      </div>
+
+      <!-- Opponent Team -->
+      <div class="team-box away">
+        <input type="text" id="awayTeamName" class="team-name-input" style="text-align: right;" value="Opponent" title="Click to rename opponent">
+        <div class="team-shots-score">
+          <span id="awayShotsDisplay" class="team-shots">SOG: 0</span>
+          <span id="awayScoreDisplay" class="team-score">0</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- TAB 1: LIVE GAME TRACKING -->
+  <main id="game-tab" class="tab-content active">
+    <!-- Spotter Line Filter Chips -->
+    <div id="lineFilterBar" class="line-filter-bar">
+      <!-- Injected by app.js -->
+    </div>
+
+    <!-- Spotter Player Grid -->
+    <div class="spotter-section-title">
+      <span>Tap Player Number</span>
+      <span style="font-size: 0.7rem; color: var(--accent-cyan);">Spotter Mode</span>
+    </div>
+    <div id="playerSpotterGrid" class="player-grid">
+      <!-- Player cards injected by app.js -->
+    </div>
+
+    <!-- Event Action Buttons Pad -->
+    <div class="action-pad-container">
+      <div class="action-pad-header">
+        <div id="selectedPlayerIndicator" class="selected-player-indicator">
+          <span>Tap a player above to log stats</span>
+        </div>
+      </div>
+      <div id="eventsButtonGrid" class="events-button-grid">
+        <!-- Event buttons injected by app.js -->
+      </div>
+    </div>
+
+    <!-- Live Event Feed -->
+    <div class="live-feed-card">
+      <div class="feed-header">
+        <span>Recent Play-by-Play</span>
+        <span>Tap &times; to delete</span>
+      </div>
+      <ul id="liveFeedList" class="feed-list">
+        <!-- Events feed injected by app.js -->
+      </ul>
+    </div>
+  </main>
+
+  <!-- TAB 2: STATS, BOX SCORE & EXPORT -->
+  <section id="stats-tab" class="tab-content">
+    <!-- Print Report Header (Visible only when exporting/printing to PDF) -->
+    <div id="printHeader" class="print-only-header"></div>
+
+    <!-- Export Action Buttons -->
+    <div class="export-bar">
+      <button class="btn-export csv" onclick="window.hockeyApp.exportCSV()">
+        <svg style="width:18px;height:18px" viewBox="0 0 24 24"><path fill="currentColor" d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm1 8V3.5L19.5 8H15zM8.8 17.5l1.7-2.6 1.7 2.6h1.5l-2.4-3.5 2.3-3.3h-1.5l-1.6 2.5-1.6-2.5H7.4l2.3 3.3-2.4 3.5h1.5z"/></svg>
+        Export Spreadsheet (.CSV)
+      </button>
+      <button class="btn-export pdf" onclick="window.hockeyApp.exportPDF()">
+        <svg style="width:18px;height:18px" viewBox="0 0 24 24"><path fill="currentColor" d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z"/></svg>
+        Print / PDF Report
+      </button>
+    </div>
+
+    <!-- Period Shots Summary -->
+    <div class="stats-card">
+      <h3>Shots on Goal by Period</h3>
+      <table class="stats-table">
+        <thead>
+          <tr>
+            <th>Team</th>
+            <th>P1</th>
+            <th>P2</th>
+            <th>P3</th>
+            <th>OT</th>
+            <th>Total SOG</th>
+          </tr>
+        </thead>
+        <tbody id="periodStatsTableBody">
+          <!-- Populated by app.js -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Skater Box Score Table -->
+    <div class="stats-card">
+      <h3>Skater Stats</h3>
+      <div id="skaterStatsTableContainer">
+        <!-- Populated by app.js -->
+      </div>
+    </div>
+
+    <!-- Goalie Stats Table -->
+    <div class="stats-card">
+      <h3>Goalie Stats</h3>
+      <div id="goalieStatsTableContainer">
+        <!-- Populated by app.js -->
+      </div>
+    </div>
+
+    <!-- Coach Notes (Print/PDF friendly) -->
+    <div class="stats-card">
+      <h3>Coach Notes & Feedback</h3>
+      <textarea id="coachNotesInput" style="width:100%; min-height:80px; background:#0d1527; color:#fff; border:1px solid var(--border-color); border-radius:6px; padding:8px; font-family:inherit; font-size:0.85rem;" placeholder="Add game notes, line performance feedback, or coach comments here..."></textarea>
+    </div>
+  </section>
+
+  <!-- TAB 3: ROSTER & SPOTTER SETUP -->
+  <section id="roster-tab" class="tab-content">
+    <div class="settings-section">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+        <h3>Add Player to Roster</h3>
+        <button class="btn-secondary" onclick="window.hockeyApp.loadSampleRoster()">Load Sample Roster</button>
+      </div>
+
+      <div style="display:grid; grid-template-columns: 1fr 2fr; gap:10px;">
+        <div class="form-group">
+          <label class="form-label">Jersey #</label>
+          <input type="number" id="newPlayerNum" class="form-input" placeholder="e.g. 14">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Player Name</label>
+          <input type="text" id="newPlayerName" class="form-input" placeholder="e.g. Sophia M.">
+        </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+        <div class="form-group">
+          <label class="form-label">Position</label>
+          <select id="newPlayerPos" class="form-select">
+            <option value="F">Forward (F)</option>
+            <option value="D">Defense (D)</option>
+            <option value="G">Goalie (G)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Line / Pairing</label>
+          <select id="newPlayerLine" class="form-select">
+            <option value="L1">Line 1 (F)</option>
+            <option value="L2">Line 2 (F)</option>
+            <option value="L3">Line 3 (F)</option>
+            <option value="D1">D-Pair 1</option>
+            <option value="D2">D-Pair 2</option>
+            <option value="G">Goalies</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Visual Spotter Note (Helpful early season!)</label>
+        <input type="text" id="newPlayerNote" class="form-input" placeholder="e.g. Pink stick tape, LH, white helmet, blue laces">
+      </div>
+
+      <button class="btn-primary" style="width:100%;" onclick="window.hockeyApp.addPlayerFromForm()">+ Add to Roster</button>
+    </div>
+
+    <!-- Active Roster List -->
+    <div class="settings-section">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+        <h3>Current Team Roster</h3>
+        <button class="btn-danger" style="padding:4px 8px; font-size:0.75rem;" onclick="if(confirm('Clear all players from roster?')) { window.rosterManager.clearRoster(); window.hockeyApp.renderRosterTab(); window.hockeyApp.renderSpotterGrid(); }">Clear All</button>
+      </div>
+      <div id="rosterListContainer">
+        <!-- Roster injected by app.js -->
+      </div>
+    </div>
+  </section>
+
+  <!-- TAB 4: SETTINGS & CUSTOM EVENTS -->
+  <section id="settings-tab" class="tab-content">
+    <!-- Customize Trackable Events -->
+    <div class="settings-section">
+      <h3>Customize Trackable Events</h3>
+      <p style="font-size:0.78rem; color:var(--text-muted); margin-bottom:12px;">
+        Turn off stats your team doesn't need to track so your game screen stays clean and fast.
+      </p>
+      <div id="eventTogglesList" class="toggle-list">
+        <!-- Populated by events-config.js -->
+      </div>
+    </div>
+
+    <!-- Add Custom Event Form -->
+    <div class="settings-section">
+      <h3>Create Custom Stat Event</h3>
+      <div style="display:grid; grid-template-columns: 2fr 1fr; gap:10px; margin-bottom:10px;">
+        <div class="form-group">
+          <label class="form-label">Event Name</label>
+          <input type="text" id="customEventName" class="form-input" placeholder="e.g. Zone Exit, Dump-in">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Short Code</label>
+          <input type="text" id="customEventShort" class="form-input" placeholder="e.g. ZE">
+        </div>
+      </div>
+      <button class="btn-secondary" style="width:100%;" onclick="window.hockeyApp.addCustomEventFromForm()">+ Add Custom Stat</button>
+    </div>
+
+    <!-- Game Management -->
+    <div class="settings-section">
+      <h3>Game Management</h3>
+      <p style="font-size:0.78rem; color:var(--text-muted); margin-bottom:12px;">
+        Start a fresh game. Your roster and event settings will remain intact.
+      </p>
+      <button class="btn-danger" style="width:100%; padding:12px;" onclick="window.hockeyApp.startNewGame()">
+        Start New Game (Reset Score & Stats)
+      </button>
+    </div>
+  </section>
+
+  <!-- Bottom Navigation Bar (Thumb Friendly) -->
+  <nav class="bottom-nav">
+    <button class="nav-item active" data-tab="game-tab">
+      <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9v-2h2v2zm0-4H9V7h2v5zm4 4h-2v-2h2v2zm0-4h-2V7h2v5z"/></svg>
+      <span>Track</span>
+    </button>
+    <button class="nav-item" data-tab="stats-tab">
+      <svg viewBox="0 0 24 24"><path d="M5 9.2h3V19H5zM10.6 5h2.8v14h-2.8zm5.6 8H19v6h-2.8z"/></svg>
+      <span>Stats & Export</span>
+    </button>
+    <button class="nav-item" data-tab="roster-tab">
+      <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+      <span>Roster</span>
+    </button>
+    <button class="nav-item" data-tab="settings-tab">
+      <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+      <span>Settings</span>
+    </button>
+  </nav>
+
+  <!-- Toast Notification -->
+  <div id="toastMsg" class="toast-msg"></div>
+
+  <!-- JavaScript Modules -->
+  <script src="./js/events-config.js"></script>
+  <script src="./js/roster.js"></script>
+  <script src="./js/export.js"></script>
+  <script src="./js/app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator && window.location.protocol.startsWith('http')) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW registration skipped:', err));
+      });
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,17 @@
+{
+  "name": "Hockey Stats Spotter",
+  "short_name": "HockeyStats",
+  "description": "Fast ice hockey stats tracking app for parents and coaches",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0d1b2a",
+  "theme_color": "#1b263b",
+  "icons": [
+    {
+      "src": "./icons/icon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
