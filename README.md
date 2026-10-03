@@ -4,21 +4,20 @@ A fast, mobile-friendly ice hockey game stats tracking web application designed 
 
 ---
 
-## 🚀 Quick Start (Running on Mac & iPhone)
+## 🌐 Live Web App (Access on iPhone)
 
-### Option 1: On your Mac
-1. Simply double-click **`start.command`** in Finder (or double-click **`index.html`** to open directly in Safari or Chrome).
-2. The app will open instantly with a pre-loaded sample roster so you can test it right away.
+You can open the app directly on your iPhone Safari from anywhere:
+👉 **[https://alexzwu.github.io/hockey-stats-tracker/](https://alexzwu.github.io/hockey-stats-tracker/)**
 
-### Option 2: On your iPhone (Live from the Rink)
-1. On your Mac, double-click **`start.command`** while connected to your home Wi-Fi.
-2. The terminal will display your Mac's local network address, for example:
-   ```text
-   👉 http://192.168.1.50:8000
-   ```
-3. Open **Safari** on your iPhone and type in that address.
-4. Tap the **Share** button in Safari (square with an arrow pointing up) $\rightarrow$ select **"Add to Home Screen"**.
-5. **That's it!** The app is now installed on your iPhone like a native app and works **100% offline** (powered by Service Workers and local storage) even inside cold ice rinks with zero reception.
+To install it on your iPhone:
+1. Open the link above in **Safari**.
+2. Tap the **Share** button (the square with an arrow pointing up).
+3. Scroll down and tap **"Add to Home Screen"**.
+4. The app is now installed on your iPhone like a native app and **works 100% offline** even at ice rinks with no cellular or Wi-Fi signal!
+
+---
+
+## 💻 Running Locally on your Mac
 
 ---
 
